@@ -59,7 +59,7 @@ class main:
 
     def UpdateLights(self):
         new = []
-        if "all" in self.__dict__.keys():
+        if "all" in self.__dict__.keys() and self.all:
             for key, value in self.areas.items():
                 new.extend(value)
         else:
