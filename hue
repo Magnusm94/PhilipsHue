@@ -1,0 +1,77 @@
+#!/usr/bin/env python
+from phue import Bridge
+import sys, os
+import json
+from PhilipsHue import *
+import argparse
+
+class Hue(Lights, Groups):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def keys(self):
+        return list(self.conn.get_api().keys())
+
+class main:
+
+    def __init__(self, *args, **kwargs):
+        self.LoadSettings()
+        self.LoadArgs()
+        self.UpdateLights()
+        self.UpdateColor()
+        self()
+
+    def __call__(self, *args, **kwargs):
+        if self.color:
+            hue.SetColor(int(self.color), *self.lights)
+        elif self.on:
+            hue.LightsOn(*self.lights)
+        elif self.off:
+            hue.LightsOff(*self.lights)
+        elif self.switch:
+            hue.SwitchLight(*self.lights)
+
+        elif self.dim:
+            hue.DimBrightness(self.dim, *self.lights)
+        elif self.increase:
+            hue.IncreaseBrightness(self.increase, *self.lights)
+
+        elif self.list:
+            for key, value in self.areas.items():
+                print(f"{key}: {value}")
+
+    def __setitem__(self, key, value):
+        if key in self.__dict__.keys():
+            print(f"{key} is a duplicate")
+        self.__dict__[key] = value
+
+    def LoadSettings(self):
+        global hue
+        settings = json.load(open("settings.json", "r"))
+        for key, value in settings.items():
+            self[key] = value
+        hue = Hue(**settings)
+
+    def LoadArgs(self):
+        args = Arguments()
+        for key, value in args.data.items():
+            self[key] = value
+
+    def UpdateLights(self):
+        new = []
+        if "all" in self.__dict__.keys():
+            for key, value in self.areas.items():
+                new.extend(value)
+        else:
+            if self.lights:
+                for i in range(len(self.lights)):
+                    if self.lights[i] in self.areas.keys():
+                        new.extend(self.areas[self.lights[i]])
+        self.lights = new
+
+    def UpdateColor(self):
+        if self.color in self.colors.keys():
+            self.color = self.colors[self.color]
+
+if __name__ == "__main__":
+    main()

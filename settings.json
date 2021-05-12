@@ -1,0 +1,15 @@
+{
+  "bridgeIP": "192.168.1.10",
+
+  "areas": {
+    "desk": [2],
+    "kitchen": [4],
+    "sofa": [1]
+  },
+
+  "colors": {
+    "orange": 454,
+    "white": 300,
+    "blue": 153
+  }
+}
