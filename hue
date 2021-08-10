@@ -5,7 +5,7 @@ import json
 from PhilipsHue import *
 import argparse
 
-class Hue(Lights, Groups):
+class Hue(Lights, Groups, TimeRules):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -13,8 +13,8 @@ class Hue(Lights, Groups):
         return list(self.conn.get_api().keys())
 
 class main:
-
     def __init__(self, *args, **kwargs):
+        self.TimeRules = TimeRules()
         self.LoadSettings()
         self.LoadArgs()
         self.UpdateLights()
@@ -30,6 +30,16 @@ class main:
             hue.LightsOff(*self.lights)
         elif self.switch:
             hue.SwitchLight(*self.lights)
+        elif self.get_temperature:
+            print(*self.lights)
+
+        # Prints brightness of given light.
+        elif self.get_brightness:
+            for light in self.lights:
+                try:
+                    print(f"{light}: {hue.GetBrightness(light)}")
+                except KeyError:
+                    pass
 
         elif self.dim:
             hue.DimBrightness(self.dim, *self.lights)
@@ -40,14 +50,32 @@ class main:
             for key, value in self.areas.items():
                 print(f"{key}: {value}")
 
+        else:
+            self.Auto()
+
     def __setitem__(self, key, value):
         if key in self.__dict__.keys():
             print(f"{key} is a duplicate")
         self.__dict__[key] = value
 
+    def Auto(self):
+        """
+        Automatic rules based on TimeRules class in checktime.py. 
+        Allows to execute main program with no arguments for estimated values of color temperature and brightness.
+        """
+        for area, lights in self.areas.items():
+            for light in lights:
+                if self.TimeRules.brightness:
+                    hue.LightsOn(light)
+                    hue.SetColor(self.TimeRules.temperature, light)
+                    hue.SetBrightness(self.TimeRules.brightness, light)
+                else:
+                    hue.LightsOff(light)
+
     def LoadSettings(self):
         global hue
-        settings = json.load(open("settings.json", "r"))
+        settingsfile = os.path.dirname(__file__) + "/PhilipsHue/settings.json"
+        settings = json.load(open(settingsfile, "r"))
         for key, value in settings.items():
             self[key] = value
         hue = Hue(**settings)

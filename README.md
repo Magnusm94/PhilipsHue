@@ -12,6 +12,14 @@ It's also recommended to use `pip` to install `phue`, otherwise you can find it 
 I've personally saved my files inside `~/.local/bin/` which is part of `$PATH`, allowing `hue` to become an executable command on Mac or Linux.
 I will however probably create a proper installation for this later.
 
+## Sun cycle simulation
+Executing the `hue` file will by default make calculations which linearly increases brightness from the morning with blue light, which will turn more and more orange during the night. 
+The settings for when they turn on, and when during the day the peak brightness should be can be configured in `./PhilipsHue/checktime.py` in the `TimeRules` class. 
+
+For systemd users, this can be automated by moving `phue.service` and `phue.timer` to `/etc/systemd/system/`.
+You will need to configure `phue.service` first to contain correct username and path to the executable file `hue`.
+After this, you can execute `systemctl daemon-reload` and start the service with `systemctl enable --now phue.timer`.
+By default, the update interval is set to every 60 seconds, but this can easily be configured differently in `phue.timer`.
 
 # Configuration
 Add the IP of your Philips Hue bridge in `settings.json`. It would be recommended to set it up so your bridge has a static IP address.

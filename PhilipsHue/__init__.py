@@ -5,8 +5,9 @@ from connect    import *
 from lights     import *
 from groups     import *
 from arguments  import *
+from checktime  import *
 
-__all__ = ["Connect", "Lights", "Groups", "Arguments"]
+__all__ = ["Connect", "Lights", "Groups", "Arguments", "TimeRules"]
 
 
 # config.py  groups.py  listapigroups.py  resourcelinks.py  rules.py  scenes.py	schedules.py  sensors.py

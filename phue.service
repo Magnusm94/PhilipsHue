@@ -1,0 +1,11 @@
+[Unit]
+Description=Controls Philips Hue
+
+[Service]
+# Add your username here
+User=magnus 
+
+Type=oneshot
+
+# Add path to executable here
+ExecStart=/home/magnus/.local/bin/hue 

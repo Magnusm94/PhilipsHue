@@ -1,0 +1,10 @@
+[Unit]
+Description=Timer for phue.service
+
+[Timer]
+#Interval for each light update.
+OnUnitActiveSec=60s
+OnBootSec=60s
+
+[Install]
+WantedBy=timers.target

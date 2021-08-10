@@ -48,6 +48,19 @@ class Arguments:
                 "-c", "--color", help="""
         Color temperature between 153 and 454 for white lights. 
         Also accepts configured colors by names in settings.json.""")
+
+        # Get color temperature of lights.
+        self.parser.add_argument(
+                "-gt", "--get_temperature", help="""
+        Currently not working!
+        Get current color temperature of light."""
+        )
+
+        # Get current brightness of light.
+        self.parser.add_argument(
+                "-gb", "--get_brightness", action="store_true", help="""
+        Get current brightness of light."""
+        )
         
         # Returns listed lights and their group.
         self.parser.add_argument(
@@ -65,6 +78,8 @@ class Arguments:
             dim = self.args.dim,
             increase = self.args.increase,
             color = self.args.color,
+            get_temperature = self.args.get_temperature,
+            get_brightness = self.args.get_brightness,
             list = self.args.list,
             all = self.args.all
         )
